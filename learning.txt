@@ -4,3 +4,12 @@ npx create-next-app@latest my-app --typescript --tailwind --eslint //to create n
 
 
 "use client"; //in nextjs this means in the file we will use hooks
+
+
+
+npx shadcn-ui@latest add input
+npx shadcn-ui@latest add dropdown-menu
+npx shadcn-ui@latest add button
+npm install @radix-ui/react-icons
+npx shadcn-ui@latest add avatar
+npx shadcn-ui@latest add dialog

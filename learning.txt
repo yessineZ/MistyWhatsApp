@@ -1,0 +1,6 @@
+npm install next-themes
+npx shadcn-ui@latest init
+npx create-next-app@latest my-app --typescript --tailwind --eslint //to create next app
+
+
+"use client"; //in nextjs this means in the file we will use hooks

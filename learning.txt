@@ -13,3 +13,23 @@ npx shadcn-ui@latest add button
 npm install @radix-ui/react-icons
 npx shadcn-ui@latest add avatar
 npx shadcn-ui@latest add dialog
+
+
+npm install convex
+npx convex dev
+
+
+
+npm install @clerk/nextjs
+
+Clerk Components : 
+                    <SignedIn>
+						<SignOutButton />
+					</SignedIn>
+
+
+					<SignedOut>
+						<SignIn></SignIn>
+					</SignedOut>
+
+

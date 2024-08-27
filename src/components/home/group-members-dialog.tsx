@@ -22,7 +22,7 @@ const GroupMembersDialog = () => {
 					<DialogDescription>
 						<div className='flex flex-col gap-3 '>
 							{users?.map((user) => (
-								<div key={user._id} className={`flex gap-3 items-center p-2 rounded`}>
+								<div key={user._id} className={`flex gap-3 items-center p-2 rounded-full`}>
 									<Avatar className='overflow-visible'>
 										{user.isOnline && (
 											<div className='absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full border-2 border-foreground' />

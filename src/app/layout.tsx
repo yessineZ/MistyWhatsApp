@@ -22,7 +22,7 @@ export default function RootLayout({
           <ConvexClientProvider>
             {children}
             </ConvexClientProvider>
-</ThemeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

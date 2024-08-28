@@ -5,6 +5,7 @@ import Conversation from "./conversation";
 import { conversations } from "@/dummy-data/db";
 import {  SignIn, SignOutButton, UserButton } from "@clerk/clerk-react";
 import { SignedIn , SignedOut } from "@clerk/nextjs";
+import UserListDialog from "./user-list-dialog";
 const LeftPanel = () => {
 	
 
@@ -18,7 +19,7 @@ const LeftPanel = () => {
 					
 
 					<div className='flex items-center gap-3'>
-						<MessageSquareDiff size={20} /> {/* TODO: This line will be replaced with <UserListDialog /> */}
+					<UserListDialog/>
 						<ThemeSwitch />
 						<LogOut size={20} className='cursor-pointer' />
 					</div>

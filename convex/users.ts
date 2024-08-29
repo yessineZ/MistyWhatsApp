@@ -32,7 +32,8 @@ export const getUsers = query({
 	args: {},
 	handler: async (ctx, args) => {
 		const identity = await ctx.auth.getUserIdentity();
-		if (!identity) {
+		console.log(identity) ; 
+        if (!identity) {
 			throw new ConvexError("Unauthorized");
 		}
 
@@ -49,16 +50,10 @@ export const getMe = query({
 			throw new ConvexError("Unauthorized");
 		}
 
-		const user = await ctx.db
-			.query("users")
-			.withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
-			.unique();
-
-		if (!user) {
-			throw new ConvexError("User not found");
-		}
-
-		return user;
+		const users = await ctx.db.query("users").collect();
+		const currentUser = users.find((user) => user.email === identity.email);
+		console.log(currentUser) ;
+        return currentUser;
 	},
 });
 

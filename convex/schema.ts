@@ -17,6 +17,12 @@ export default defineSchema({
 
 
 
-   }) 
+   }),
+   messages : defineTable({
+      conversation : v.id('conversations'),
+      sender : v.id('users'),
+      content : v.string(),
+      messageType : v.union(v.literal('text'), v.literal('image') , v.literal('video'))
+   }).index('by_conversation',['conversation'])
 
 })

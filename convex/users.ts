@@ -1,5 +1,6 @@
 import { ConvexError, v }  from 'convex/values' ;
 import { internalMutation , query } from './_generated/server';
+import { copyFileSync } from 'fs';
 "ts-ignore"
 export const createUser = internalMutation({
     args : {
@@ -32,13 +33,18 @@ export const getUsers = query({
 	args: {},
 	handler: async (ctx, args) => {
 		const identity = await ctx.auth.getUserIdentity();
-		console.log(identity) ; 
+        const tokenIdentifier = identity?.tokenIdentifier.slice(8) ; 
+        console.log(tokenIdentifier) ; 
+		 
         if (!identity) {
 			throw new ConvexError("Unauthorized");
 		}
 
 		const users = await ctx.db.query("users").collect();
-		return users.filter((user) => user.tokenIdentifier !== identity.tokenIdentifier);
+		return users.filter((user) => {
+           console.log(user.tokenIdentifier+ " piw  " + identity.tokenIdentifier) ; 
+            return user.tokenIdentifier !== tokenIdentifier ;
+        })
 	},
 });
 

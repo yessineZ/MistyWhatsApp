@@ -2,12 +2,16 @@ import {defineSchema , defineTable} from 'convex/server' ;
 import { v } from 'convex/values' ; 
 export default defineSchema({
   users: defineTable({
+      _id : v.any()  ,
 		name: v.optional(v.string()),
 		email: v.string(),
 		image: v.string(),
 		tokenIdentifier: v.string(),
 		isOnline: v.boolean(),
 	}).index("by_tokenIdentifier", ["tokenIdentifier"]).index("by_email",['email']),
+
+
+
    conversations : defineTable({
     participants : v.array(v.id('users')) , 
     isGroup : v.boolean() ,

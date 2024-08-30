@@ -1,4 +1,3 @@
-import { users } from "@/dummy-data/db";
 import {
 	Dialog,
 	DialogContent,
@@ -9,8 +8,18 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Crown } from "lucide-react";
+import { Conversation, useConversationStore } from "@/store/chat-store";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
+type GroupMembersDialogProps = {
+		selectedConversation : Conversation  
+	}
 
-const GroupMembersDialog = () => {
+const GroupMembersDialog = (args: { conversationId: Id<"conversations"> }) => {
+		const {selectedConversation } = useConversationStore() ; 
+		const users = useQuery(api.conversations.getGroupMembers, { conversationId: selectedConversation?._id });
+		
 	return (
 		<Dialog>
 			<DialogTrigger>
@@ -22,7 +31,7 @@ const GroupMembersDialog = () => {
 					<DialogDescription>
 						<div className='flex flex-col gap-3 '>
 							{users?.map((user) => (
-								<div key={user._id} className={`flex gap-3 items-center p-2 rounded-full`}>
+								<div key={user._id} className={`flex gap-3 items-center p-2 rounded`}>
 									<Avatar className='overflow-visible'>
 										{user.isOnline && (
 											<div className='absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full border-2 border-foreground' />
@@ -38,7 +47,7 @@ const GroupMembersDialog = () => {
 											<h3 className='text-md font-medium'>
 												{user.name || user.email.split("@")[0]}
 											</h3>
-											{user.admin && <Crown size={16} className='text-yellow-400' />}
+											{user._id === selectedConversation?.admin && <Crown size={16} className='text-yellow-400' />}
 										</div>
 									</div>
 								</div>

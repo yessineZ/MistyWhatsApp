@@ -8,12 +8,23 @@ import UserListDialog from "./user-list-dialog";
 import { useConvexAuth, useQuery } from "convex/react";
 import { query } from "../../../convex/_generated/server";
 import { api } from "../../../convex/_generated/api";
+import { useEffect } from "react";
+import { useConversationStore } from "@/store/chat-store";
 const LeftPanel = () => {
  
-	const { isAuthenticated } = useConvexAuth() ; 
+	const { isAuthenticated, isLoading } = useConvexAuth() ; 
 		const conversations = useQuery(api.conversations.getMyConversations ,isAuthenticated ? undefined : 'skip') ;
+		const {selectedConversation , setSelectedConversation}  = useConversationStore() ;  
+		 
+
 		
-	console.log(conversations) ; 
+		useEffect(() => {
+			const conversationsIds = conversations?.map(conversation => conversation._id) ;
+			if(selectedConversation && !conversationsIds?.includes(selectedConversation?._id)) {
+				setSelectedConversation(null) ; 
+			}
+		},[selectedConversation,conversations]); ; 
+
 	return (
 		<div className='w-1/4 border-gray-600 border-r'>
 			<div className='sticky top-0 bg-left-panel z-10'>

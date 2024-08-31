@@ -48,6 +48,64 @@ export const createConversation = mutation({
     }
 });
 
+export const getConversationById = query({
+	args: { conversationId: v.id("conversations") },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new ConvexError("Unauthorized");
+
+        const conversation = await ctx.db
+            .query("conversations")
+            .filter((q) => q.eq(q.field("_id"), args.conversationId))
+            .first();
+
+        if (!conversation) throw new ConvexError("Conversation not found");
+
+        return conversation ;
+	}});
+
+
+export const kickUser = mutation({
+	args : { userId : v.id('users') ,
+		conversationId : v.id("conversations") ,
+	},
+	handler : async (ctx , args) => {
+		const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new ConvexError("Unauthorized");
+		
+        const conversation = await ctx.db.query('conversations').filter((q) => q.eq(q.field('_id'),args.conversationId)).unique()  ;
+		if(!conversation) {
+            throw new ConvexError("Conversation not found") ;
+        }
+
+		await ctx.db.patch(args.conversationId, {
+			participants: conversation.participants.filter((participant) => participant!== args.userId),
+		});
+
+
+	}
+});
+
+export const unKickUser = mutation({
+	args : { userId : v.id('users') ,
+        conversationId : v.id("conversations") ,
+    },
+    handler : async (ctx , args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) throw new ConvexError("Unauthorized");
+        
+        const conversation = await ctx.db.query('conversations').filter((q) => q.eq(q.field('_id'),args.conversationId)).unique()  ;
+        if(!conversation) {
+            throw new ConvexError("Conversation not found") ;
+        }
+
+        await ctx.db.patch(args.conversationId, {
+			participants: conversation.participants.concat(args.userId),
+        });
+
+
+    }
+})
 
 export const getMyConversations = query({
 	args: {},

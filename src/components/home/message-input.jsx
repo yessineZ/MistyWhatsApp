@@ -12,22 +12,25 @@ import loadingSpinner from "../loadingSpinner";
 import MediaDropdown from "./mediaDropDown";
 const MessageInput = () => {
     const [msgText, setMsgText] = useState("");
-	const [isSending,setIsSending] = useState(false)  ;
+	const [isSending,setIsSending] = useState(true)  ;
     const me = useQuery(api.users.getMe);
     const { selectedConversation } = useConversationStore();
     const sendMessage = useMutation(api.messages.sendTextMessage);
 
     const handleSubmit = async (e) => {
+        
         e.preventDefault();
+        setIsSending(!isSending) ;
         if (!msgText) return;
 
         try {
-			setIsSending(true);
+			
             await sendMessage({
                 content: msgText,
                 conversationId: selectedConversation._id,
                 sender: me._id,
             });
+            console.log(isSending) ; 
         } catch (e) {
             console.error(e);
             toast.error("Failed to send message.");
@@ -76,8 +79,7 @@ const MessageInput = () => {
                 <div className="mr-4 flex items-center gap-3">
                     
 					
-					{isSending ? <span className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-  </span> :
+					{isSending ? <div className='w-5 h-5   border-rose-300 border-b-teal-500  rounded-full animate-spin' /> :
 					<Button
                         type="submit"
                         size="sm"

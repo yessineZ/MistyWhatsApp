@@ -18,6 +18,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { mutation } from "../../../convex/_generated/server";
 import toast from "react-hot-toast";
+import { useConversationStore } from "@/store/chat-store";
 const UserListDialog = () => {
 	const [selectedUsers, setSelectedUsers] = useState<Id<"users">[]>([]);
 	const [groupName, setGroupName] = useState("");
@@ -26,7 +27,8 @@ const UserListDialog = () => {
 	const [renderedImage, setRenderedImage] = useState("");
 	const imgRef = useRef<HTMLInputElement>(null);
 	const dialogCloseRef = useRef<HTMLInputElement>(null);
-
+	const { selectedConversation  , setSelectedConversation} = useConversationStore() ; 
+	 
 
     const generateUploadUrl = useMutation(api.conversations.generateUploadUrl) ; 
 
@@ -57,7 +59,7 @@ const UserListDialog = () => {
             const isGroup = selectedUsers.length > 1 ;
             let conversationId ;
             if(!isGroup) {
-                const conversationId = await createConversation({
+                 conversationId = await createConversation({
                     participants : [...selectedUsers,getMe?._id!] ,
                     isGroup : false ,
                 })
@@ -78,11 +80,28 @@ const UserListDialog = () => {
                     admin : getMe?._id! ,  
 				});
 				toast.success('Conversation created Successfully') ; 
+			
+			
 			}
 			setSelectedUsers([]) ; 
 			setGroupName('') ;
 			setSelectedImage(null) ;
 			dialogCloseRef.current?.click() ; 
+			
+
+
+			const conversationName = isGroup ? groupName : users?.find((user) => user._id === selectedUsers[0])?.name ;
+			
+		console.log(selectedConversation) ; 
+			setSelectedConversation({
+				_id : conversationId,
+                isGroup,
+                name: conversationName,
+                participants: selectedUsers,
+                image : isGroup ? renderedImage : users?.find(user => user._id === selectedUsers[0])?.image ,
+                admin: getMe?._id,
+                groupName: isGroup? groupName : "",
+			})
 
 
         }catch(err) {
@@ -90,12 +109,15 @@ const UserListDialog = () => {
 			toast.error(err) ;  
         }finally{
             setIsLoading(false) ;
+
         }
     }
 
     const users = useQuery(api.users.getUsers) ; 
 	const getMe = useQuery(api.users.getMe) ; 
 	console.log(getMe) ; 
+
+	
 	
 
 	return (

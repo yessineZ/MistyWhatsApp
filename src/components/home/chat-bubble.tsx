@@ -8,6 +8,7 @@ import ChatBubbleAvatar from "./chat-bubble-avatar" ;
 import DateIndicator from "./date-Indicator";
 import { ReactAction } from "convex/react";
 import ReactPlayer from "react-player";
+import ChatNameKick from "./chat-bubble-name-kick";
 
 type ChatBubbleProps = {
 	message: IMessage;
@@ -37,11 +38,15 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 			<>
 				<DateIndicator message={message} previousMessage={previousMessage} />
 				<div className='flex gap-1 w-2/3'>
+					
 					<ChatBubbleAvatar isGroup={isGroup} isMember={isMember} message={message} fromAI={fromAI} />
+					
 					<div className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}>
+						<ChatNameKick message={message} me={me}/>
 						{message.messageType === 'text' && <TextMessage message={message}/> }
 				{message.messageType === 'image' && <ImageMessage message={message} handleClick={() => setOpen(true)} /> }
 				{message.messageType ==='video' && <VideoMessage message={message} /> }
+						
 						{!fromAI && <OtherMessageIndicator />}
 						{fromAI && <Bot size={16} className='absolute bottom-[2px] left-2' />}
 

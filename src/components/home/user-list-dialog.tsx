@@ -26,7 +26,7 @@ const UserListDialog = () => {
 	const [selectedImage, setSelectedImage] = useState<File | null>(null);
 	const [renderedImage, setRenderedImage] = useState("");
 	const imgRef = useRef<HTMLInputElement>(null);
-	const dialogCloseRef = useRef<HTMLInputElement>(null);
+	const dialogCloseRef = useRef<HTMLButtonElement>(null);
 	const { selectedConversation  , setSelectedConversation} = useConversationStore() ; 
 	 
 
@@ -105,8 +105,7 @@ const UserListDialog = () => {
 
 
         }catch(err) {
-            console.log(err) ; 
-			toast.error(err) ;  
+            console.log(err) ;   
         }finally{
             setIsLoading(false) ;
 

@@ -4,7 +4,7 @@ import { Id } from "../../convex/_generated/dataModel";
 export type Conversation = {
      _id: any ; 
     image?: string;
-    participants?: Id<"users">;
+    participants?: Id<"users">[];
     admin?: Id<"users">;
     groupImage?: string;
     groupName?: string;

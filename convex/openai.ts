@@ -37,7 +37,7 @@ export const mistyRobot = action({
         }
 
         await ctx.runMutation(api.messages.sendChatGPTMessage, {
-            content: messageContent! ?? 'idk brother xd' ,
+            content: messageContent! ,
             conversation: args.conversation,
             messageType: 'text',
         });
@@ -54,7 +54,7 @@ export const mistyRobot2 = action({
     },
     handler : async (ctx , args) => {
         const res = await openAi.images.generate({
-            model : 'dall-e-3'  ,
+            model : 'dall-e-2'  ,
             prompt : args.messageBody,
             n : 1,
             size : '512x512',

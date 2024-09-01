@@ -12,11 +12,9 @@ import { Conversation, useConversationStore } from "@/store/chat-store";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
-type GroupMembersDialogProps = {
-		selectedConversation : Conversation  
-	}
 
-const GroupMembersDialog = (args: { conversationId: Id<"conversations"> }) => {
+
+const GroupMembersDialog = () => {
 		const {selectedConversation } = useConversationStore() ; 
 		const users = useQuery(api.conversations.getGroupMembers, { conversationId: selectedConversation?._id });
 		

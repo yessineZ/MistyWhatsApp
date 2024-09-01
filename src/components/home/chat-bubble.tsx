@@ -9,6 +9,7 @@ import DateIndicator from "./date-Indicator";
 import { ReactAction } from "convex/react";
 import ReactPlayer from "react-player";
 import ChatNameKick from "./chat-bubble-name-kick";
+import { cp } from "fs";
 
 type ChatBubbleProps = {
 	message: IMessage;
@@ -26,9 +27,10 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 	const isMember = selectedConversation?.participants.includes(message.sender?._id) || false;
 	const isGroup = selectedConversation?.isGroup;
 	const fromMe = message.sender?._id === me._id;
-	const fromAI = message.sender?.name === "ChatGPT";
+	console.log(message) ; 
+	const fromAI = message?.sender.name === 'mistyRobot';
+	console.log(fromAI) ; 
 	const bgClass = fromMe ? "bg-green-chat" : !fromAI ? "bg-white dark:bg-gray-primary" : "bg-blue-500 text-white";
-	console.log(message.sender);
 	const [open, setOpen] = useState(false);
 
 	
@@ -42,8 +44,8 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 					<ChatBubbleAvatar isGroup={isGroup} isMember={isMember} message={message} fromAI={fromAI} />
 					
 					<div className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}>
-						<ChatNameKick message={message} me={me}/>
-						{message.messageType === 'text' && <TextMessage message={message}/> }
+					<ChatNameKick message={message} me={me} isAI={fromAI} /> 
+						{message.messageType === 'text' && <TextMessage chpt={fromAI} message={message}/> }
 				{message.messageType === 'image' && <ImageMessage message={message} handleClick={() => setOpen(true)} /> }
 				{message.messageType ==='video' && <VideoMessage message={message} /> }
 						
@@ -57,14 +59,14 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 			</>
 		);
 	}
-
+ 
 	return (
 		<>
 			<DateIndicator message={message} previousMessage={previousMessage} />
 
 			<div className='flex gap-1 w-2/3 ml-auto'>
 				<div className={`flex  z-20 max-w-fit px-2 pt-1 rounded-md shadow-md ml-auto relative ${bgClass}`}>
-				{message.messageType === 'text' && <TextMessage message={message}/> }
+				{message.messageType === 'text' && <TextMessage chpt={fromAI} message={message}/> }
 				{message.messageType === 'image' && <ImageMessage message={message} handleClick={() => setOpen(true)} /> }
 				{message.messageType ==='video' && <VideoMessage message={message} /> }
 				
@@ -137,7 +139,7 @@ const VideoMessage = ({ message } : { message : IMessage }) => {
 
 
 
-const TextMessage = ({ message }: { message: IMessage }) => {
+const TextMessage = ({ message , chpt }: { message: IMessage , chpt : boolean }) => {
 	const isLink = /^(ftp|http|https):\/\/[^ "]+$/.test(message.content); // Check if the content is a URL
 
 	return (
@@ -147,12 +149,12 @@ const TextMessage = ({ message }: { message: IMessage }) => {
 					href={message.content}
 					target='_blank'
 					rel='noopener noreferrer'
-					className={`mr-2 text-sm font-bold text-blue-400 underline`}
+					className={`mr-2 text-sm font-bold ${chpt ? ' text-black' : 'text-blue-400'  } underline`}
 				>
 					{message.content}
 				</a>
 			) : (
-				<p className={`mr-2 text-sm font-bold text-pretty text-red-600`}>{message.content}</p>
+				<p className={`mr-2 text-sm font-bold text-pretty ${chpt ? 'text-black-200' : 'text-red-600'  }`}>{message.content}</p>
 			)}
 		</div>
 	);

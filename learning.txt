@@ -31,5 +31,9 @@ Clerk Components :
 					<SignedOut>
 						<SignIn></SignIn>
 					</SignedOut>
+npm install openai
 
 
+zegoCloud for videoCalls 10000min free
+
+npm i @zegocloud/zego-uikit-prebuilt --save

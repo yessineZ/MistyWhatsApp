@@ -1,7 +1,7 @@
 import { mutation , query } from "./_generated/server";
 import { v , ConvexError } from 'convex/values' ; 
 
-
+import { api } from "./_generated/api";
 export const sendTextMessage = mutation({
     args : {
         sender : v.string() ,
@@ -36,8 +36,44 @@ export const sendTextMessage = mutation({
             messageType : "text",
         }) ;
 
+            //Message for chatGpt  
+        
+        if(args.content.startsWith('@mistyRobot')) {
+            
+            console.log('chatGpt') ; 
+            await ctx.scheduler.runAfter(0,api.openai.mistyRobot,{
+                messageBody : args.content , 
+                conversation : args.conversationId 
+            });
+        }
+
+            if(args.content.startsWith('@image')) {
+            await ctx.scheduler.runAfter(0,api.openai.mistyRobot2,{
+                messageBody : args.content , 
+                conversation : args.conversationId 
+            });
+        }
+
     }
 });
+
+
+export const sendChatGPTMessage = mutation({
+    args : {
+        content : v.union(v.literal('text'),v.literal('image')) ,
+        conversation : v.id('conversations'),
+        messageType : v.union(v.literal('text'),v.literal('image')) 
+    },
+    handler : async (ctx , args) => {
+        await ctx.db.insert('messages',{
+            content : args.content,
+            conversation : args.conversation,
+            messageType : args.messageType,
+            sender : "mistyRobot" ,
+         
+        })
+    }
+})
 
 
 
@@ -55,6 +91,10 @@ export const getMessages = query({
 
          const messagesWithSender = await Promise.all(
              messages.map(async (message) => {
+                if(message.sender === 'mistyRobot') {
+                    const image = message.messageType === 'text' ? '/mistyRobot.png' : '/mistyRobot.png'
+                    return {...message, sender :  {name : 'mistyRobot' , image }}
+                }
                  const sender = await ctx.db.query('users').filter(q => q.eq(q.field('_id'),message.sender)).first() ; 
 
                 return {...message, sender } ; 
@@ -104,6 +144,9 @@ export const sendVideo = mutation({
 			messageType: "video",
 			conversation: args.conversation,
 		});
+
+        
+        
 	},
 });
 

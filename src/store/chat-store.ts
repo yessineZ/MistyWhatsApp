@@ -48,5 +48,5 @@ export interface IMessage {
 		email: string;
 		_creationTime: number;
 		isOnline: boolean;
-	};
+	}   ;
 }

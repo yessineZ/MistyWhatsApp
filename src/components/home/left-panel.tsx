@@ -37,7 +37,16 @@ const LeftPanel = () => {
 					<div className='flex items-center gap-3'>
 				{isAuthenticated && <UserListDialog/> }	
 						<ThemeSwitch />
-						<LogOut size={20} className='cursor-pointer' />
+						<SignedIn>
+
+						<span className=''>
+							<LogOut size={16}/>
+
+							<span className='opacity-0 rounded top-3  absolute'><SignOutButton/></span>
+							
+						
+						</span>	
+						</SignedIn>
 					</div>
 				</div>
 				<div className='p-3 flex items-center'>

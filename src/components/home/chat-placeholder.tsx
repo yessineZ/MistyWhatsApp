@@ -9,7 +9,7 @@ const ChatPlaceHolder = () => {
 				<Image src={"/mistyWhatsApp.png"} alt='mistyWhatsApp' width={320} height={188} />
 				<p className='text-3xl font-extralight mt-5 mb-2'>Download MistyWhatsApp for Windows</p>
 				<p className='w-1/2 text-center text-gray-primary text-sm text-muted-foreground'>
-					Hello , welcome to MistyWhatsApp i hope you will enjoy it :{')'}
+				Hello! Welcome to MistyWhatsApp. I hope you enjoy your experience with us :{')'}
 				</p>
 
 				<Button className='rounded-full my-5 bg-red-500 hover:bg-pink-600'>

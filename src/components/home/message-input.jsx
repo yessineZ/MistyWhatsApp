@@ -8,35 +8,34 @@ import { useConversationStore } from "@/store/chat-store";
 import toast from "react-hot-toast";
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import useComponentVisible from "@/hooks/useComponentVisible";
-import loadingSpinner from "../loadingSpinner";
 import MediaDropdown from "./mediaDropDown";
+
 const MessageInput = () => {
     const [msgText, setMsgText] = useState("");
-	const [isSending,setIsSending] = useState(true)  ;
+	const [isSending, setIsSending] = useState(false);
     const me = useQuery(api.users.getMe);
     const { selectedConversation } = useConversationStore();
     const sendMessage = useMutation(api.messages.sendTextMessage);
 
     const handleSubmit = async (e) => {
-        
         e.preventDefault();
-        setIsSending(!isSending) ;
-        if (!msgText) return;
+        if (!msgText || isSending) return;
 
+        setIsSending(true);
+  
         try {
-			
             await sendMessage({
                 content: msgText,
                 conversationId: selectedConversation._id,
                 sender: me._id,
             });
-            console.log(isSending) ; 
+                  console.log(isSending) ; 
         } catch (e) {
             console.error(e);
             toast.error("Failed to send message.");
         } finally {
+            setIsSending(false);
             setMsgText("");
-			setIsSending(false);
         }
     };
 
@@ -60,12 +59,11 @@ const MessageInput = () => {
                         />
                     )}
                 </div>
-                <MediaDropdown/>
+                <MediaDropdown />
             </div>
 
             <form onSubmit={handleSubmit} className="w-full flex gap-3">
                 <div className="flex-1">
-					 
                     <Input
                         type="text"
                         placeholder="Type a message"
@@ -73,22 +71,20 @@ const MessageInput = () => {
                         value={msgText}
                         onChange={(e) => setMsgText(e.target.value)}
                     />
-
                 </div>
 					
                 <div className="mr-4 flex items-center gap-3">
-                    
-					
-					{isSending ? <div className='w-5 h-5   border-rose-300 border-b-teal-500  rounded-full animate-spin' /> :
-					<Button
-                        type="submit"
-                        size="sm"
-                        className="bg-transparent text-foreground hover:bg-transparent"
-                    >
-                        {msgText.length > 0 ? <Send /> : <Mic />}
-					
-                    </Button>
-}
+                    {isSending ? (
+                        <div className="w-5 h-5 border-t-2 border-b-2 border-gray-400 rounded-full animate-spin" />
+                    ) : (
+                        <Button
+                            type="submit"
+                            size="sm"
+                            className="bg-transparent text-foreground hover:bg-transparent"
+                        >
+                            {msgText.length > 0 ? <Send /> : <Mic />}
+                        </Button>
+                    )}
                 </div>
             </form>
         </div>

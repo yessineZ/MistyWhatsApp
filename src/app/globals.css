@@ -84,6 +84,8 @@
 		--muted: 217.2 32.6% 17.5%;
 		--muted-foreground: 215 20.2% 65.1%;
 
+		 
+
 		--accent: 217.2 32.6% 17.5%;
 		--accent-foreground: 210 40% 98%;
 
@@ -117,4 +119,8 @@
 	::-webkit-scrollbar-track {
 		background-color: hsl(var(--container));
 	}
+	::-webkit-scrollbar-pink {
+		background-color: hsl(var());
+	}
+
 }

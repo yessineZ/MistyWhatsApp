@@ -92,7 +92,7 @@ const ChatNameKick = ({ message, me , isAI }: ChatAvatarActionsProps) => {
 
     return (
         <div className="flex gap-4 items-center justify-start group font-bold cursor-pointer">
-            <span className={`text-sm ${isAI ? "text-yellow-500" :  "text-white" } text-bold flex gap-2 items-center justify-center`} onClick={handleCreateConversation}>
+            <span className={`text-sm ${isAI ?  "text-yellow-500" :  "text-black dark:text-white" } text-bold flex gap-2 items-center justify-center`} onClick={handleCreateConversation}>
                 
                
                 {message.sender?.name}

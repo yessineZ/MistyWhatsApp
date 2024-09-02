@@ -10,6 +10,9 @@ export const createUser = internalMutation({
         email : v.string() 
     },
     handler : async (ctx , args) => {
+        if(args.name === ('misty' ||'Misty') ) {
+            throw new ConvexError("This name is reserved for Misty");
+        }
          await ctx.db.insert("users",{
             tokenIdentifier : args.tokenIdentifier,
             name : args.name ,

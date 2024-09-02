@@ -12,12 +12,13 @@ import { Conversation, useConversationStore } from "@/store/chat-store";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
-
+import { BadgeCheck } from "lucide-react";
 
 const GroupMembersDialog = () => {
 		const {selectedConversation } = useConversationStore() ; 
 		const users = useQuery(api.conversations.getGroupMembers, { conversationId: selectedConversation?._id });
-		
+		console.log(users) ; 
+		const specialUsers : string[] = ['Zouari Yessine','Misty','Yessine Zouari','misty']  ; 
 	return (
 		<Dialog>
 			<DialogTrigger>
@@ -44,8 +45,13 @@ const GroupMembersDialog = () => {
 										<div className='flex items-center gap-2'>
 											<h3 className='text-md font-medium'>
 												{user.name || user.email.split("@")[0]}
+												
 											</h3>
+											<span className="flex justify-center gap-2 items-center">
+												{specialUsers.includes(user.name!) && <BadgeCheck size={16} className='text-blue-500'/> }
 											{user._id === selectedConversation?.admin && <Crown size={16} className='text-yellow-400' />}
+											</span>
+											
 										</div>
 									</div>
 								

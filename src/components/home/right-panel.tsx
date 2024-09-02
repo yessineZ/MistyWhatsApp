@@ -7,6 +7,7 @@ import ChatPlaceHolder from "@/components/home/chat-placeholder";
 import GroupMembersDialog from "./group-members-dialog";
 import { useConversationStore } from "@/store/chat-store";
 import { useQuery } from "convex/react";
+import { BadgeCheck } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 const RightPanel = () => {
 	 
@@ -37,8 +38,11 @@ const RightPanel = () => {
 							</AvatarFallback>
 						</Avatar>
 						<div className='flex flex-col'>
-							<p>{conversationName}</p>
+							<p className="flex flex-row items-center justify-center">{conversationName}
+								{conversationName === ('Zouari Yessine' || 'Misty' || 'Yessine Zouari') && <BadgeCheck size={16} className="text-blue-700 m-2" />}
+							</p>
 							 {selectedConversation.isGroup && <GroupMembersDialog />} 
+
 						</div>
 					</div>
 

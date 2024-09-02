@@ -32,7 +32,7 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 	console.log(fromAI) ; 
 	const bgClass = fromMe ? "bg-green-chat" : !fromAI ? "bg-white dark:bg-gray-primary" : "bg-blue-500 text-white";
 	const [open, setOpen] = useState(false);
-
+	
 	
 
 	if (!fromMe) {

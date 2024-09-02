@@ -1,5 +1,5 @@
 import { IMessage, useConversationStore } from "@/store/chat-store";
-import { Ban, LogOut } from "lucide-react";
+import { BadgeCheck, Ban, LogOut } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import { useMutation } from "convex/react";
 import toast from "react-hot-toast";
@@ -16,6 +16,7 @@ const ChatNameKick = ({ message, me , isAI }: ChatAvatarActionsProps) => {
     const unKickUser = useMutation(api.conversations.unKickUser);
     const { selectedConversation, setSelectedConversation } = useConversationStore();
     const createConversation = useMutation(api.conversations.createConversation) ; 
+    const specialUsers : string[] = ['Zouari Yessine','Misty','Yessine Zouari','misty']  ; 
     
     const isMember = selectedConversation?.participants?.includes(message.sender?._id) || false;
 
@@ -91,7 +92,12 @@ const ChatNameKick = ({ message, me , isAI }: ChatAvatarActionsProps) => {
 
     return (
         <div className="flex gap-4 items-center justify-start group font-bold cursor-pointer">
-            <span className={`text-sm ${isAI ? "text-yellow-500" :  "text-white" } text-bold`} onClick={handleCreateConversation}>{message.sender?.name}</span>
+            <span className={`text-sm ${isAI ? "text-yellow-500" :  "text-white" } text-bold flex gap-2 items-center justify-center`} onClick={handleCreateConversation}>
+                
+               
+                {message.sender?.name}
+                 {specialUsers.includes(message.sender?.name!) && <BadgeCheck size={16} className="text-blue-700"/> }              
+            </span>
             
             {isMember && selectedConversation?.admin === me._id && !isAI && (
                 <LogOut size={16} className="opacity-0 group-hover:opacity-100 text-red-600" onClick={handleKickUser} />

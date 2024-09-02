@@ -5,6 +5,7 @@ import { ImageIcon, Users, VideoIcon } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useConversationStore } from "@/store/chat-store";
+import { BadgeCheck } from "lucide-react";
 const Conversation = ({ conversation }: { conversation: any }) => {
 	const conversationImage = conversation.groupImage || conversation.image; 
 	const conversationName = conversation.groupName || conversation.name;
@@ -13,6 +14,7 @@ const Conversation = ({ conversation }: { conversation: any }) => {
 	const authUser = useQuery(api.users.getMe) ; 
 	const {setSelectedConversation , selectedConversation } = useConversationStore() ; 
 	const currentActiveConversation = selectedConversation?._id === conversation?._id   ;
+	const specialUsers : string[] = ['Zouari Yessine','Misty','Yessine Zouari','misty']  ; 
 	console.log(currentActiveConversation) ; 
 	return (
 		<>
@@ -29,6 +31,7 @@ const Conversation = ({ conversation }: { conversation: any }) => {
 				<div className='w-full'>
 					<div className='flex items-center'>
 						<h3 className='text-xs lg:text-sm font-medium'>{conversationName}</h3>
+						{specialUsers.includes(conversationName!) && <BadgeCheck size={16} className="text-blue-700 m-2" />}
 						<span className='text-[10px] lg:text-xs text-gray-500 ml-auto'>
 							{formatDate(lastMessage?._creationTime || conversation._creationTime)}
 						</span>

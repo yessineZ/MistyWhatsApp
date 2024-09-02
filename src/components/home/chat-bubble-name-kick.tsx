@@ -24,8 +24,16 @@ const ChatNameKick = ({ message, me , isAI }: ChatAvatarActionsProps) => {
             await kickUser({ conversationId: selectedConversation?._id, userId: message.sender?._id });
             toast.success("User kicked successfully");
             setSelectedConversation({
-                ...selectedConversation,
-                participants: selectedConversation?.participants?.filter(userId => userId !== message.sender?._id),
+                 ...selectedConversation,
+            _id: selectedConversation?._id,  // explicitly include the _id
+            participants: selectedConversation?.participants?.filter(userId => userId !== message.sender?._id),
+            image: selectedConversation?.image,
+            admin: selectedConversation?.admin,
+            groupImage: selectedConversation?.groupImage,
+            groupName: selectedConversation?.groupName,
+            isGroup: selectedConversation?.isGroup,
+            name: selectedConversation?.name,
+            lastMessage: selectedConversation?.lastMessage,
             });
         } catch (err) {
             console.error(err);
@@ -38,7 +46,15 @@ const ChatNameKick = ({ message, me , isAI }: ChatAvatarActionsProps) => {
             toast.success("User unbanned successfully");
             setSelectedConversation({
                 ...selectedConversation,
+                _id: selectedConversation?._id,  
                 participants: selectedConversation?.participants?.concat(message.sender?._id),
+                image: selectedConversation?.image,
+            admin: selectedConversation?.admin,
+            groupImage: selectedConversation?.groupImage,
+            groupName: selectedConversation?.groupName,
+            isGroup: selectedConversation?.isGroup,
+            name: selectedConversation?.name,
+            lastMessage: selectedConversation?.lastMessage,
             });
         } catch (err) {
             console.error(err);
@@ -62,11 +78,10 @@ const ChatNameKick = ({ message, me , isAI }: ChatAvatarActionsProps) => {
             isGroup: false,
             admin: me._id,
             image : message.sender?.image ,
-            isOnline : message.sender?.isOnline
             
         })
     }catch(error) {
-        toast.error(error?.message) ; 
+        console.error(error);
     }
 
 

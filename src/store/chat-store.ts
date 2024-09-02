@@ -5,10 +5,10 @@ export type Conversation = {
      _id: any ; 
     image?: string;
     participants?: Id<"users">[];
-    admin?: Id<"users">;
+    admin?: Id<"users"> ;
     groupImage?: string;
     groupName?: string;
-    isGroup: boolean;
+    isGroup: boolean | null | undefined ;
     name?: string;
     lastMessage?: {
         _id: Id<"messages">;

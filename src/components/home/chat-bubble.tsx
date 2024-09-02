@@ -24,7 +24,7 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 	const time = `${hour}:${minute}`;
 
 	const { selectedConversation } = useConversationStore();
-	const isMember = selectedConversation?.participants.includes(message.sender?._id) || false;
+	const isMember = selectedConversation?.participants?.includes(message.sender?._id) || false;
 	const isGroup = selectedConversation?.isGroup;
 	const fromMe = message.sender?._id === me._id;
 	console.log(message) ; 
@@ -41,7 +41,7 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 				<DateIndicator message={message} previousMessage={previousMessage} />
 				<div className='flex gap-1 w-2/3'>
 					
-					<ChatBubbleAvatar isGroup={isGroup} isMember={isMember} message={message} fromAI={fromAI} />
+					<ChatBubbleAvatar isGroup={isGroup!} isMember={isMember} message={message} fromAI={fromAI} />
 					
 					<div className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}>
 					<ChatNameKick message={message} me={me} isAI={fromAI} /> 
@@ -77,7 +77,7 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 					
 				
 				</div>
-				<ChatBubbleAvatar isGroup={isGroup} isMember={isMember} message={message} fromAI={fromAI} />
+				<ChatBubbleAvatar isGroup={isGroup!} isMember={isMember} message={message} fromAI={fromAI} />
 			</div>
 		</>
 	);

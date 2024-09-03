@@ -10,15 +10,17 @@ export function getUrlParams(url = window.location.href) {
 export default function VideoUIKit() {
 	const roomID = getUrlParams().get("roomID") || randomID(5);
 	const { user } = useClerk();
-	console.log(user) ; 
+	console.log(user?.id) ; 
 
 	let myMeeting = (element: HTMLDivElement) => {
 		const initMeeting = async () => {
+			if(user) {
 			const res = await fetch(`/api/zegocloud?userID=${user?.id}`);
+			
 			const { token, appID } = await res.json();
 
 			const username = user?.fullName || user?.emailAddresses[0].emailAddress.split("@")[0];
-			
+			console.log(token,appID) ; 
 			const kitToken = ZegoUIKitPrebuilt.generateKitTokenForProduction(appID, token, roomID, user?.id!, username);
 
 			const zp = ZegoUIKitPrebuilt.create(kitToken);
@@ -42,7 +44,7 @@ export default function VideoUIKit() {
 			});
 		};
 		initMeeting();
-	};
+		}	};
 
 	return <div className='myCallContainer' ref={myMeeting} style={{ width: "100vw", height: "100vh" }}></div>;
 }

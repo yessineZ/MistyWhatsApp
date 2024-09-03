@@ -26,7 +26,7 @@ const LeftPanel = () => {
 		},[selectedConversation,conversations]); ; 
 
 	return (
-		<div className='w-1/4 border-gray-600 border-r'>
+		<div className='pc1:w-1/4 pc2:w-1/4 phone:w-full  border-gray-600 border-r'>
 			<div className='sticky top-0 bg-left-panel z-10'>
 				{/* Header */}
 				<div className='flex justify-between bg-gray-primary p-3 items-center'>
@@ -67,7 +67,7 @@ const LeftPanel = () => {
 			</div>
 
 			{/* Chat List */}
-			<div className='my-3 flex flex-col gap-0 max-h-[80%] overflow-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-300 scrollbar-track-gray-100'>
+			<div className='my-3 flex flex-col gap-0 max-h-[80%] pc1:h-full  pc2:h-full  phone:h-[70px] overflow-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-pink-500 scrollbar-track-pink-800'>
         {conversations?.map((conversation) => (
           <Conversation key={conversation._id} conversation={conversation} />
         ))}

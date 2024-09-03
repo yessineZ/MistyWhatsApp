@@ -72,7 +72,7 @@ const UserListDialog = () => {
                     body : selectedImage 
 				});
 				const {storageId } = await result.json() ; 
-				await createConversation({
+			conversationId = await createConversation({
 					participants : [...selectedUsers,getMe?._id!] ,
 					isGroup : true , 
                     groupName : groupName , 

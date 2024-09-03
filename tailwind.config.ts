@@ -15,11 +15,17 @@ const config = {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
     },
     extend: {
+      screens: {
+      'phone': '390px',
+      'md': [
+        {'min': '668px', 'max': '767px'},
+        {'min': '868px'}
+      ],
+      'pc1': '1100px',
+      'pc2': '1400px',
+    },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

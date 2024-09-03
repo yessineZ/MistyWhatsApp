@@ -26,7 +26,7 @@ const RightPanel = () => {
 	const isGroup = true ; 
 
 	return (
-		<div className='w-3/4 flex flex-col'>
+		<div className='pc1:w-3/4 pc2:w-3/4 flex flex-col phone:w-full phone:h-3/4 pc1:h-full pc2:h-full'>
 			<div className='w-full sticky top-0 z-50'>
 				{/* Header */}
 				<div className='flex justify-between bg-gray-primary p-3'>
@@ -58,7 +58,9 @@ const RightPanel = () => {
 			<MessageContainer />
 
 			{/* INPUT */}
-			<MessageInput />
+            <MessageInput />
+
+			
 		</div>
 	);
 };

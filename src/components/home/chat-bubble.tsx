@@ -3,7 +3,7 @@ import { IMessage, useConversationStore } from "@/store/chat-store";
 import Image from "next/image";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription } from "../ui/dialog";
-import { Bot } from "lucide-react";
+import { Bot, Video } from "lucide-react";
 import ChatBubbleAvatar from "./chat-bubble-avatar" ; 
 import DateIndicator from "./date-Indicator";
 import { ReactAction } from "convex/react";
@@ -32,6 +32,8 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 	console.log(fromAI) ; 
 	const bgClass = fromMe ? "bg-green-chat" : !fromAI ? "bg-white dark:bg-gray-primary" : "bg-blue-500 text-white";
 	const [open, setOpen] = useState(false);
+	const [openVid,setOpenVid] = useState(false) ; 
+	console.log(openVid) ; 
 	
 	
 
@@ -47,14 +49,17 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 					<ChatNameKick message={message} me={me} isAI={fromAI} /> 
 						{message.messageType === 'text' && <TextMessage chpt={fromAI} message={message}/> }
 				{message.messageType === 'image' && <ImageMessage message={message} handleClick={() => setOpen(true)} /> }
-				{message.messageType ==='video' && <VideoMessage message={message} /> }
-						
+				{message.messageType ==='video' &&
+				<span className='pc1:h-[150px] pc1:w-[150px] pc2:h-[200px] pc2:w-[200px] phone:h-[50px] phone:w'>	
+				<VideoMessage handleClick={() => setOpenVid(true)} message={message} />  </span>}
 						{!fromAI && <OtherMessageIndicator />}
 						{fromAI && <Bot size={16} className='absolute bottom-[2px] left-2' />}
 
-						{open && <ImageDialog src={message.content} open={open} onClose={() => setOpen(false)} />}
+						{open && <MediaDialog src={message.content} open={open} onClose={() => setOpen(false)} type="image"/>}
 						<MessageTime time={time} fromMe={fromMe} />
+						{openVid && <MediaDialog src={message.content} open={openVid} onClose={() => setOpenVid(false) } type='video' /> }    
 					</div>
+					 
 				</div>
 			</>
 		);
@@ -65,17 +70,19 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 			<DateIndicator message={message} previousMessage={previousMessage} />
 
 			<div className='flex gap-1 w-2/3 ml-auto'>
-				<div className={`flex  z-20 max-w-fit px-2 pt-1 rounded-md shadow-md ml-auto relative ${bgClass}`}>
+				<div className={`flex z-20 max-w-fit px-2 pt-1 rounded-md shadow-md ml-auto relative ${bgClass}`}>
 				{message.messageType === 'text' && <TextMessage chpt={fromAI} message={message}/> }
 				{message.messageType === 'image' && <ImageMessage message={message} handleClick={() => setOpen(true)} /> }
-				{message.messageType ==='video' && <VideoMessage message={message} /> }
-				
+				{message.messageType ==='video' &&
+				<span className='pc1:h-[150px] pc1:w-[150px] pc2:h-[200px] pc2:w-[200px] phone:h-[50px] phone:w-[50px]'>	
+				<VideoMessage message={message} handleClick={() => setOpenVid(true)} /> 
+				</span>}
 					<SelfMessageIndicator />
 					
-					{open && <ImageDialog src={message.content} open={open} onClose={() => setOpen(false)} />}
+					{open && <MediaDialog src={message.content} open={open} onClose={() => setOpen(false)} type="image" />}
 					<MessageTime time={time} fromMe={fromMe} />
 					
-				
+					{openVid && <MediaDialog src={message.content} open={openVid} onClose={() => setOpenVid(false) } type='video' /> }    
 				</div>
 				<ChatBubbleAvatar isGroup={isGroup!} isMember={isMember} message={message} fromAI={fromAI} />
 			</div>
@@ -84,38 +91,50 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 };
 export default ChatBubble;
 
-
-const ImageMessage = ({ message , handleClick  }: { message: IMessage , handleClick : () => void }) => {
-	return (
-		<div className='md:w-[150px] lg:w-[250px] lg:h-[250px] md:h-[150px] m-2 relative'>
-			<Image
-				src={message.content}
-				fill
-				className='cursor-pointer object-cover rounded'
-				alt='image'
-				onClick={handleClick}
-				
-			/>
-		</div>
-	);
+const MediaDialog = ({ src, onClose, open, type }: { open: boolean; src: string; onClose: () => void; type: "image" | "video" }) => {
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) onClose();
+      }}
+    >
+      <DialogContent className='pc1:min-w-[750px] pc2:min-w-[750px] pc1:h-max pc2:h-full phone:w-[300px] phone:h-[300px]'>
+        <DialogDescription className='relative h-[450px] flex justify-center'>
+          {type === "image" ? (
+            <Image src={src} fill className='rounded-lg object-contain' alt='image' />
+          ) : (
+            <ReactPlayer url={src} width='100%' height='100%' controls={true} />
+          )}
+        </DialogDescription>
+      </DialogContent>
+    </Dialog>
+  );
 };
 
-const ImageDialog = ({ src, onClose, open }: { open: boolean; src: string; onClose: () => void }) => {
-	return (
-		<Dialog
-			open={open}
-			onOpenChange={(isOpen) => {
-				if (!isOpen) onClose();
-			}}
-		>
-			<DialogContent className='min-w-[750px]'>
-				<DialogDescription className='relative h-[450px] flex justify-center'>
-					<Image src={src} fill className='rounded-lg object-contain' alt='image' />
-				</DialogDescription>
-			</DialogContent>
-		</Dialog>
-	);
+
+
+const VideoMessage = ({ message, handleClick }: { message: IMessage; handleClick: () => void }) => {
+  return (
+    <div onClick={handleClick}>
+      <ReactPlayer url={message.content} width='80%' height='80%' controls={true} />
+    </div>
+  );
 };
+
+const ImageMessage = ({ message, handleClick }: { message: IMessage; handleClick: () => void }) => {
+  return (
+    <div className='md:w-[150px] pc1:w-[200px] pc1:h-[200px] pc2:h-[250px] pc2:w-[250px] phone:h-[50px] phone:w-[50px] m-2 relative' onClick={handleClick}>
+      <Image
+        src={message.content}
+        fill
+        className='object-cover rounded'
+        alt='image'
+      />
+    </div>
+  );
+};
+
 
 const MessageTime = ({ time, fromMe }: { time: string; fromMe: boolean }) => {
 	return (
@@ -132,10 +151,6 @@ const OtherMessageIndicator = () => (
 const SelfMessageIndicator = () => (
 	<div className='absolute bg-green-chat top-0 -right-[3px] w-3 h-3 rounded-br-full overflow-hidden' />
 );
-
-const VideoMessage = ({ message } : { message : IMessage }) => {
-	return <ReactPlayer url={message.content} width="250px" height="250px" controls={true} />
-}
 
 
 
@@ -154,7 +169,7 @@ const TextMessage = ({ message , chpt }: { message: IMessage , chpt : boolean })
 					{message.content}
 				</a>
 			) : (
-				<p className={`mr-2 text-sm font-bold text-pretty ${chpt ? 'text-black-200' : 'text-red-600'  }`}>{message.content}</p>
+				<p className={`mr-2 text-sm font-bold text-pretty ${chpt ? 'text-red-600' : 'dark:text-white text-black'  }`}>{message.content}</p>
 			)}
 		</div>
 	);

@@ -42,7 +42,7 @@ const MessageInput = () => {
     const { ref, isComponentVisible, setIsComponentVisible } = useComponentVisible();
 
     return (
-        <div className="bg-gray-primary p-2 flex gap-4 items-center">
+        <div className="bg-gray-primary p-2 flex gap-4 items-center mt-auto">
             <div className="relative flex gap-2 ml-2">
                 <div ref={ref} onClick={() => setIsComponentVisible(true)}>
                     <Laugh className="text-gray-600 dark:text-gray-400 cursor-pointer" />

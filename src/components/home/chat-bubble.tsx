@@ -74,7 +74,7 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 				{message.messageType === 'text' && <TextMessage chpt={fromAI} message={message}/> }
 				{message.messageType === 'image' && <ImageMessage message={message} handleClick={() => setOpen(true)} /> }
 				{message.messageType ==='video' &&
-				<span className='pc1:h-[150px] pc1:w-[150px] pc2:h-[200px] pc2:w-[200px] phone:h-[50px] phone:w-[50px]'>	
+				<span className='pc1:h-[150px] pc1:w-[150px] pc2:h-[200px] pc2:w-[200px] phone:h-[100px] phone:w-[100px]' onClick={() => setOpenVid(true)}>	
 				<VideoMessage message={message} handleClick={() => setOpenVid(true)} /> 
 				</span>}
 					<SelfMessageIndicator />
@@ -104,7 +104,7 @@ const MediaDialog = ({ src, onClose, open, type }: { open: boolean; src: string;
           {type === "image" ? (
             <Image src={src} fill className='rounded-lg object-contain' alt='image' />
           ) : (
-            <ReactPlayer url={src} width='100%' height='100%' controls={true} />
+            <ReactPlayer url={src} width='100%' height='100%' controls={true}/>
           )}
         </DialogDescription>
       </DialogContent>
@@ -117,7 +117,7 @@ const MediaDialog = ({ src, onClose, open, type }: { open: boolean; src: string;
 const VideoMessage = ({ message, handleClick }: { message: IMessage; handleClick: () => void }) => {
   return (
     <div onClick={handleClick}>
-      <ReactPlayer url={message.content} width='80%' height='80%' controls={true} />
+      <ReactPlayer url={message.content} width='100%' height='100%' controls={true} />
     </div>
   );
 };

@@ -18,7 +18,7 @@ const config = {
     },
     extend: {
       screens: {
-      'phone': '390px',
+      'phone': '360px',
       'md': [
         {'min': '668px', 'max': '767px'},
         {'min': '868px'}

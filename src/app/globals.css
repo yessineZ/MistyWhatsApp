@@ -118,10 +118,12 @@
 		border-radius: 4px;
 	}
 	::-webkit-scrollbar-track {
+		
 		background-color: hsl(var(--container));
 	}
 	::-webkit-scrollbar-pink {
 		background-color: hsl(var(--pink));
+		
 	}
 
 }

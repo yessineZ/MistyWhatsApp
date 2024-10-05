@@ -3,19 +3,18 @@ import { action } from './_generated/server';
 import { v } from 'convex/values';
 import { api } from './_generated/api';
 
-const apiKey =process.env.OPENAI_API_KEY ; 
+const apiKey = process.env.OPENAI_API_KEY; 
 
 const openAi = new OpenAi({ apiKey });
 
+// First Action: mistyRobot (chat response generation)
 export const mistyRobot = action({
-
     args: {
         messageBody: v.string(),
         conversation: v.id('conversations'),
     },
     handler: async (ctx, args) => {
         let messageContent;
-        console.log(args.messageBody + apiKey);
         try {
             const res = await openAi.chat.completions.create({
                 model: 'gpt-3.5-turbo',
@@ -33,34 +32,48 @@ export const mistyRobot = action({
             messageContent = res.choices[0].message.content;
         } catch (error) {
             console.error('OpenAI API error:', error);
-            messageContent = "import OpenAi from 'openai';
+            messageContent = "Something went wrong with the OpenAI API.";
         }
-    }
-}
 
-
-
-
-
-
-export const mistyRobot2 = action({
-    args : {
-        messageBody : v.string(),
-        conversation : v.id('conversations'),
-    },
-    handler : async (ctx , args) => {
-        const res = await openAi.images.generate({
-            model : 'dall-e-2'  ,
-            prompt : args.messageBody,
-            n : 1,
-            size : '512x512',
-        });
-        const imageUrl = res.data[0].url;
+        // Send message content back to the conversation
         await ctx.runMutation(api.messages.sendChatGPTMessage, {
-            content: imageUrl ?? '/mistyRobot.png' ,
+            content: messageContent,
             conversation: args.conversation,
-            messageType: 'image',
+            messageType: 'text',
         });
+    },
+});
 
-    }
-})
+// Second Action: mistyRobot2 (image generation with DALL-E 2)
+export const mistyRobot2 = action({
+    args: {
+        messageBody: v.string(),
+        conversation: v.id('conversations'),
+    },
+    handler: async (ctx, args) => {
+        try {
+            const res = await openAi.images.generate({
+                model: 'dall-e-2',
+                prompt: args.messageBody,
+                n: 1,
+                size: '512x512',
+            });
+            const imageUrl = res.data[0].url;
+
+            // Send the generated image URL back to the conversation
+            await ctx.runMutation(api.messages.sendChatGPTMessage, {
+                content: imageUrl ?? '/mistyRobot.png', // Fallback to a default image if generation fails
+                conversation: args.conversation,
+                messageType: 'image',
+            });
+        } catch (error) {
+            console.error('DALL-E API error:', error);
+            // Fallback if image generation fails
+            await ctx.runMutation(api.messages.sendChatGPTMessage, {
+                content: '/mistyRobot.png', // Fallback image
+                conversation: args.conversation,
+                messageType: 'image',
+            });
+        }
+    },
+});

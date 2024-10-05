@@ -7,7 +7,7 @@ const apiKey = process.env.OPENAI_API_KEY;
 
 const openAi = new OpenAi({ apiKey });
 
-// First Action: mistyRobot (chat response generation)
+
 export const mistyRobot = action({
     args: {
         messageBody: v.string(),
@@ -35,7 +35,7 @@ export const mistyRobot = action({
             messageContent = "Something went wrong with the OpenAI API.";
         }
 
-        // Send message content back to the conversation
+        
         await ctx.runMutation(api.messages.sendChatGPTMessage, {
             content: messageContent,
             conversation: args.conversation,
@@ -44,7 +44,7 @@ export const mistyRobot = action({
     },
 });
 
-// Second Action: mistyRobot2 (image generation with DALL-E 2)
+
 export const mistyRobot2 = action({
     args: {
         messageBody: v.string(),
@@ -60,17 +60,16 @@ export const mistyRobot2 = action({
             });
             const imageUrl = res.data[0].url;
 
-            // Send the generated image URL back to the conversation
             await ctx.runMutation(api.messages.sendChatGPTMessage, {
-                content: imageUrl ?? '/mistyRobot.png', // Fallback to a default image if generation fails
+                content: imageUrl ?? '/mistyRobot.png',
                 conversation: args.conversation,
                 messageType: 'image',
             });
         } catch (error) {
             console.error('DALL-E API error:', error);
-            // Fallback if image generation fails
+        
             await ctx.runMutation(api.messages.sendChatGPTMessage, {
-                content: '/mistyRobot.png', // Fallback image
+                content: '/mistyRobot.png', 
                 conversation: args.conversation,
                 messageType: 'image',
             });

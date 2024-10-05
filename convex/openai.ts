@@ -36,37 +36,9 @@ export const mistyRobot = action({
             messageContent = "import OpenAi from 'openai';
         }
     }
+}
 
-export const mistyRobot2 = action({
-    args : {
-        messageBody : v.string(),
-        conversation : v.id('conversations'),
-    },
-    handler : async (ctx , args) => {
-        const res = await openAi.images.generate({
-            model : 'dall-e-2'  ,
-            prompt : args.messageBody,
-            n : 1,
-            size : '512x512',
-        });
-        const imageUrl = res.data[0].url;
-        await ctx.runMutation(api.messages.sendChatGPTMessage, {
-            content: imageUrl ?? '/mistyRobot.png' ,
-            conversation: args.conversation,
-            messageType: 'image',
-        });
 
-    }
-})" ; 
-        }
-
-        await ctx.runMutation(api.messages.sendChatGPTMessage, {
-            content: messageContent! ,
-            conversation: args.conversation,
-            messageType: 'text',
-        });
-    },
-});
 
 
 

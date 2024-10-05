@@ -33,7 +33,7 @@ export const mistyRobot = action({
             messageContent = res.choices[0].message.content;
         } catch (error) {
             console.error('OpenAI API error:', error);
-            messageContent = "idk brother xd" ; 
+            messageContent = "JavaScript is a high-level, dynamic programming language primarily used to create interactive and dynamic content on websites" ; 
         }
 
         await ctx.runMutation(api.messages.sendChatGPTMessage, {

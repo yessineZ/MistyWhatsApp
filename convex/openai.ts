@@ -34,53 +34,8 @@ export const mistyRobot = action({
         } catch (error) {
             console.error('OpenAI API error:', error);
             messageContent = "import OpenAi from 'openai';
-import { action } from './_generated/server';
-import { v } from 'convex/values';
-import { api } from './_generated/api';
-
-const apiKey =process.env.OPENAI_API_KEY ; 
-
-const openAi = new OpenAi({ apiKey });
-
-export const mistyRobot = action({
-
-    args: {
-        messageBody: v.string(),
-        conversation: v.id('conversations'),
-    },
-    handler: async (ctx, args) => {
-        let messageContent;
-        console.log(args.messageBody + apiKey);
-        try {
-            const res = await openAi.chat.completions.create({
-                model: 'gpt-3.5-turbo',
-                messages: [
-                    {
-                        role: 'system',
-                        content: 'You are a terse bot and you are in a group chat responding to questions with 1-sentence answers.',
-                    },
-                    {
-                        role: 'user',
-                        content: args.messageBody,
-                    },
-                ],
-            });
-            messageContent = res.choices[0].message.content;
-        } catch (error) {
-            console.error('OpenAI API error:', error);
-            messageContent = "JavaScript is a high-level, dynamic programming language primarily used to create interactive and dynamic content on websites" ; 
         }
-
-        await ctx.runMutation(api.messages.sendChatGPTMessage, {
-            content: messageContent! ,
-            conversation: args.conversation,
-            messageType: 'text',
-        });
-    },
-});
-
-
-
+    }
 
 export const mistyRobot2 = action({
     args : {

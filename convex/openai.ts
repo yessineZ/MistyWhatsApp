@@ -1,70 +1,61 @@
-import OpenAi from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { action } from './_generated/server';
 import { v } from 'convex/values';
 import { api } from './_generated/api';
 
-const apiKey =process.env.OPENAI_API_KEY ; 
-
-const openAi = new OpenAi({ apiKey });
+const apiKey = process.env.GOOGLE_GEMINI_API_KEY || "YOUR_GOOGLE_GEMINI_API_KEY_HERE";
+const genAI = new GoogleGenerativeAI(apiKey);
 
 export const mistyRobot = action({
-
     args: {
         messageBody: v.string(),
         conversation: v.id('conversations'),
     },
     handler: async (ctx, args) => {
         let messageContent;
-        console.log(args.messageBody + apiKey);
+        console.log(args.messageBody);
         try {
-            const res = await openAi.chat.completions.create({
-                model: 'gpt-3.5-turbo',
-                messages: [
-                    {
-                        role: 'system',
-                        content: 'You are a terse bot and you are in a group chat responding to questions with 1-sentence answers.',
-                    },
-                    {
-                        role: 'user',
-                        content: args.messageBody,
-                    },
-                ],
+            const model = genAI.getGenerativeModel({
+                model: 'gemini-1.5-flash',
+                systemInstruction: 'You are a terse bot in a group chat responding to questions.',
             });
-            messageContent = res.choices[0].message.content;
+            const result = await model.generateContent(args.messageBody);
+            messageContent = result.response.text();
         } catch (error) {
-            console.error('OpenAI API error:', error);
-            messageContent = "JavaScript is a high-level, dynamic programming language primarily used to create interactive and dynamic content on websites" ; 
+            console.error('Google Gemini API error:', error);
+            messageContent = "hello";
         }
 
         await ctx.runMutation(api.messages.sendChatGPTMessage, {
-            content: messageContent! ,
+            content: messageContent!,
             conversation: args.conversation,
             messageType: 'text',
         });
     },
 });
 
-
-
-
 export const mistyRobot2 = action({
-    args : {
-        messageBody : v.string(),
-        conversation : v.id('conversations'),
+    args: {
+        messageBody: v.string(),
+        conversation: v.id('conversations'),
     },
-    handler : async (ctx , args) => {
-        const res = await openAi.images.generate({
-            model : 'dall-e-2'  ,
-            prompt : args.messageBody,
-            n : 1,
-            size : '512x512',
-        });
-        const imageUrl = res.data[0].url;
+    handler: async (ctx, args) => {
+        let imageUrl;
+        try {
+            const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+            const result = await model.generateContent(args.messageBody);
+            // Note: Gemini 1.5 Flash doesn't support image generation
+            // This is a placeholder; consider using a dedicated image generation API
+            imageUrl = '/mistyRobot.png'; // Fallback as Gemini doesn't generate images
+        } catch (error) {
+            console.error('Google Gemini API error:', error);
+            imageUrl = '/mistyRobot.png';
+        }
+
         await ctx.runMutation(api.messages.sendChatGPTMessage, {
-            content: imageUrl ?? '/mistyRobot.png' ,
+            content: imageUrl,
             conversation: args.conversation,
             messageType: 'image',
         });
-
-    }
-})
+    },
+});
